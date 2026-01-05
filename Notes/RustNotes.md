@@ -165,3 +165,103 @@ Instead of running one `main.rs` with `cargo run` you could have `src/bin` and h
 1) then we could run a specific file if we have a file name: `bin/ownership.rs`
 2) `cargo run --bin ownership`
 
+## Option + Matching with Some
+
+Option replaces our `None` in python ... it's an enum so we treat this with a `match`. You cannot just print the return value but rather use `match`.
+
+```rust
+fn main() {
+    let find_method = find();
+
+    // We cannot print the find_method but rather use "match" for each case
+    // (One where the value exists)
+    // (Two where the value is None)
+    match find_method {
+        Some(value) => println!("Existing Value: {value}"),
+        None => println!("No values exist"),
+    }
+}
+
+fn find() -> Option<int32> {
+    Some(42)    // or return None
+}
+```
+1) We use the match method to check for 2 conditions (Pattern Checking)
+   1) If the value exists 
+   2) There are no values (None)
+2) We use the `Option<int32>` think of typing `Optional[]`
+3) It returns a value within a wrapper: `Some(42)`
+   1) You need to acknowledge the **possibility of absence**
+
+---
+
+```rust
+// map function
+fn main() {
+    let n = Some(32);
+    let doubled_n = map(|v| v*2)
+
+    // These are in Option not Display mode so we can't just print unless...
+    match (n, doubled_n) {
+        (Some(original_val), Some(doubled_val)) => {
+            println!("Doubled of the original value {original_val} is {doubled_val}");
+        }
+        _ => {
+            println!("No values to double");
+        }
+    }
+}
+```
+1) We could match multiple values but catch them via tuples 
+2) More importantly, `_ => {}` we use `_` because we're catching multiple values 
+
+## If Let or Unwrap
+
+```rust
+// Instead of match we could use "if let"
+let n = Some(42);
+let doubled_n = map(|v| v*2);
+
+if let (Some(original), Some(doubled)) = (n, doubled_n) {
+    println!("Doubled the value of {original} is: {doubled}");
+}
+```
+1) We use an if let to set our `Some()` value placeholders to actual values then display them 
+
+---
+
+```rust
+let n = Some(22);
+
+let original = n.unwrap_or(0);
+let doubled_original = original * 2;
+
+println!("Doubled the value of {original} is: {doubled_original}");
+```
+1) We use `unwrap_or(default_value)`
+
+## Results 
+
+Results is usually more for **error handling** So we could **match**: **Result<OK, Error>**
+
+```rust
+fn main() {
+    match_parse_int_from_str("42")
+}
+
+// Parsing Integer From String
+fn match_parse_int_from_str(some_string: &str) -> Result<i32, std::num::ParseIntError> {
+    // Different ways to handle Result (Match Method)
+    let num_from_str = some_str.parse::<i32>();
+
+    // Explicit 
+    match num_from_str {
+        Ok(v) => {
+            println!("{v}")
+        },
+        Err(e) => {
+            println!("{e}")
+        },
+    }
+}
+```
